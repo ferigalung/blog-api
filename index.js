@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
 // routes
 app.use('/topics/v1', require('./bin/app/routes/topics'));
 app.use('/users/v1', require('./bin/app/routes/users'));
+app.use('/images/v1', require('./bin/app/routes/images'));
 
 // error handling
 app.use(errorHandling);
