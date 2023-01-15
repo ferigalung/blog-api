@@ -13,7 +13,8 @@ const configs = {
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY,
     bucketName: process.env.MINIO_BUCKET_NAME || 'blog'
-  }
+  },
+  minioPublicEndpoint: process.env.MINIO_PUBLIC_ENDPOINT
 };
 
 module.exports = configs;

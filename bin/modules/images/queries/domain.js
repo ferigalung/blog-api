@@ -1,20 +1,26 @@
 const query = require('./query');
 const { NotFoundError } = require('../../../app/helpers/errors');
+const { minioPublicEndpoint } = require('../../../app/configs/global_config');
 
-const getAllTopics = async (payload) => {
+const getAllImages = async (payload) => {
   const { page, size, search, sortBy, order } = payload;
-  return query.findPaginatedTopics({ search, page, size, sortBy, order });
+  const images = await query.findPaginatedImages({ search, page, size, sortBy, order });
+  images.result = images.result.map(image => ({
+    ...image,
+    imgUrl: minioPublicEndpoint + image.filename
+  }));
+  return images;
 };
 
-const getOneTopic = async (payload) => {
-  const topic = await query.findOneTopic({ topicId: payload.topicId });
-  if (!topic) {
-    throw new NotFoundError(`No topic found with id of "${payload.topicId}"`);
+const getOneImage = async (payload) => {
+  const image = await query.findOneImage({ imgId: payload.imgId });
+  if (!image) {
+    throw new NotFoundError(`No image found with id of "${payload.imgId}"`);
   }
-  return topic;
+  return { ...image, imgUrl: minioPublicEndpoint + image.filename };
 };
 
 module.exports = {
-  getAllTopics,
-  getOneTopic
+  getAllImages,
+  getOneImage
 };

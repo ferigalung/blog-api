@@ -8,7 +8,7 @@ const insertManyImages = Joi.object({
 });
 
 const deleteManyImages = Joi.object({
-  imgId: Joi.array().items().required()
+  imgIds: Joi.array().items().required()
 });
 
 module.exports = {

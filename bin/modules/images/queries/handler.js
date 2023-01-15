@@ -3,35 +3,35 @@ const queryModel = require('./query_model');
 const validate = require('../../../app/helpers/utils/validate');
 const logger = require('../../../app/helpers/utils/logger');
 const wrapper = require('../../../app/helpers/utils/wrapper');
-const ctx = 'topics::queries::handler';
+const ctx = 'images::queries::handler';
 
-const getAllTopics = async (req, res, next) => {
-  const { error, value } = validate(queryModel.getAllTopics, req.query);
+const getAllImages = async (req, res, next) => {
+  const { error, value } = validate(queryModel.getAllImages, req.query);
   if (error) { return next(error); }
 
   try {
-    const topics = await domain.getAllTopics(value);
-    res.json(wrapper.success({ data: topics.result, meta: topics.meta, msg: 'Successfully get topics' }));
+    const images = await domain.getAllImages(value);
+    res.json(wrapper.success({ data: images.result, meta: images.meta, msg: 'Successfully get images' }));
   } catch (err) {
-    logger.error(err, ctx, 'getAllTopic');
+    logger.error(err, ctx, 'getAllImage');
     next(err);
   }
 };
 
-const getOneTopic = async (req, res, next) => {
-  const { error, value } = validate(queryModel.getOneTopic, req.params);
+const getOneImage = async (req, res, next) => {
+  const { error, value } = validate(queryModel.getOneImage, req.params);
   if (error) { return next(error); }
 
   try {
-    const result = await domain.getOneTopic(value);
-    res.json(wrapper.success({ data: result, msg: 'Successfully get topics' }));
+    const result = await domain.getOneImage(value);
+    res.json(wrapper.success({ data: result, msg: 'Successfully get images' }));
   } catch (err) {
-    logger.error(err, ctx, 'getOneTopic');
+    logger.error(err, ctx, 'getOneImage');
     next(err);
   }
 };
 
 module.exports = {
-  getAllTopics,
-  getOneTopic
+  getAllImages,
+  getOneImage
 };

@@ -18,37 +18,20 @@ const postInsertManyImage = async (req, res, next) => {
   }
 };
 
-// const putUpdateOneTopic = async (req, res, next) => {
-//   const { error, value } = validate(commandModel.updateOneTopic, {
-//     ...req.body,
-//     topicId: req.params.topicId
-//   });
-//   if (error) { return next(error); }
+const deleteManyImages = async (req, res, next) => {
+  const { error, value } = validate(commandModel.deleteManyImages, { ...req.body });
+  if (error) { return next(error); }
 
-//   try {
-//     const result = await domain.updateOneTopic(value);
-//     res.json(wrapper.success({ data: result, msg: 'Successfully update topic' }));
-//   } catch (err) {
-//     logger.error(err, ctx, 'putUpdateOneTopic');
-//     next(err);
-//   }
-// };
-
-// const deleteOneTopic = async (req, res, next) => {
-//   const { error, value } = validate(commandModel.deleteOneTopic, req.params);
-//   if (error) { return next(error); }
-
-//   try {
-//     const result = await domain.deleteOneTopic(value);
-//     res.json(wrapper.success({ data: result, msg: 'Successfully delete topic' }));
-//   } catch (err) {
-//     logger.error(err, ctx, 'deleteOneTopic');
-//     next(err);
-//   }
-// };
+  try {
+    const result = await domain.deleteManyImages(value);
+    res.json(wrapper.success({ data: result, msg: 'Successfully delete images' }));
+  } catch (err) {
+    logger.error(err, ctx, 'deleteManyImages');
+    next(err);
+  }
+};
 
 module.exports = {
-  postInsertManyImage
-  // putUpdateOneTopic,
-  // deleteOneTopic
+  postInsertManyImage,
+  deleteManyImages
 };

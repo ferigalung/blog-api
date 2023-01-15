@@ -1,19 +1,14 @@
 const db = require('../../../app/helpers/databases/mongodb/db');
 
-const insertOneTopic = async (docs) => {
-  return db.insertOne({ collection: 'topics' }, docs);
+const insertManyImages = async (docs) => {
+  return db.insertMany({ collection: 'images' }, docs);
 };
 
-const updateOneTopic = async (topicId, docs) => {
-  return db.updateOne({ collection: 'topics' }, { topicId }, docs);
-};
-
-const deleteOneTopic = async (topicId) => {
-  return db.deleteOne({ collection: 'topics' }, { topicId });
+const deleteManyImages = async (params) => {
+  return db.deleteMany(params);
 };
 
 module.exports = {
-  insertOneTopic,
-  updateOneTopic,
-  deleteOneTopic
+  insertManyImages,
+  deleteManyImages
 };

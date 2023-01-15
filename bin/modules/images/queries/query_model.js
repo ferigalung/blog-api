@@ -1,10 +1,10 @@
 const Joi = require('joi');
 
-const getOneTopic = Joi.object({
-  topicId: Joi.string().guid({ version: 'uuidv4' }).required()
+const getOneImage = Joi.object({
+  imgId: Joi.string().guid({ version: 'uuidv4' }).required()
 });
 
-const getAllTopics = Joi.object({
+const getAllImages = Joi.object({
   page: Joi.number().integer().positive().required(),
   size: Joi.number().integer().positive().max(100).required(),
   search: Joi.string().optional().allow(null, ''),
@@ -13,6 +13,6 @@ const getAllTopics = Joi.object({
 });
 
 module.exports = {
-  getOneTopic,
-  getAllTopics
+  getOneImage,
+  getAllImages
 };

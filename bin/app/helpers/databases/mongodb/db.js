@@ -74,6 +74,18 @@ const insertOne = async (dbConfig, docs) => {
   }
 };
 
+const insertMany = async (dbConfig, docs) => {
+  const db = dbConnection.db(dbConfig.dbName || dbName);
+  const collection = db.collection(dbConfig.collection);
+  try {
+    await collection.insertMany(docs);
+    return docs;
+  } catch (error) {
+    logger.error(error, ctx, 'insertMany');
+    throw new Error(error);
+  }
+};
+
 const updateOne = async (dbConfig, params, docs) => {
   const db = dbConnection.db(dbConfig.dbName || dbName);
   const collection = db.collection(dbConfig.collection);
@@ -108,5 +120,6 @@ module.exports = {
   insertOne,
   updateOne,
   deleteOne,
-  findPaginated
+  findPaginated,
+  insertMany
 };

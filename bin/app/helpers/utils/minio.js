@@ -97,7 +97,7 @@ const objectDownload = async ({ bucketName = minioConfig.bucketName, objectName,
   }
 };
 
-const objectRemove = async (bucketName = minioConfig.bucketName, objectName) => {
+const objectRemove = async ({ bucketName = minioConfig.bucketName, objectName }) => {
   try {
     await minioClient.removeObject(bucketName, objectName);
     return true;

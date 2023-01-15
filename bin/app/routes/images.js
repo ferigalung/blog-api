@@ -7,10 +7,9 @@ const basicAuth = require('../../app/helpers/auth/basicAuth');
 const multer = require('multer');
 const upload = multer();
 
-// router.get('/', basicAuth, queryhandler.getAllImages);
-// router.get('/:imgId', basicAuth, queryhandler.getOneImage);
+router.get('/', verifyJwt, queryhandler.getAllImages);
+router.get('/:imgId', basicAuth, queryhandler.getOneImage);
 router.post('/', verifyJwt, upload.array('images'), commandHandler.postInsertManyImage);
-// router.put('/:imgId', verifyJwt, commandHandler.putUpdateOneImage);
-// router.delete('/', verifyJwt, commandHandler.deleteManyImages);
+router.delete('/', verifyJwt, commandHandler.deleteManyImages);
 
 module.exports = router;
