@@ -24,10 +24,7 @@ const insertManyImages = async (payload) => {
       filename: upload.value,
       createdAt: new Date()
     }));
-  const unUploaded = uploadMany.filter(upload => upload.status !== 'fulfilled')
-    .map(upload => ({
-      filename: upload.value
-    }));
+  const unUploaded = uploadMany.filter(upload => upload.status !== 'fulfilled').map(upload => (upload.reason));
 
   if (unUploaded.length === images.length) {
     throw new InternalServerError({ msg: 'Failed to upload images', data: { uploaded, unUploaded } });
