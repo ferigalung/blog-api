@@ -5,7 +5,7 @@ const insertManyImages = async (docs) => {
 };
 
 const deleteManyImages = async (params) => {
-  return db.deleteMany(params);
+  return db.deleteMany({ collection: 'images' }, params);
 };
 
 module.exports = {

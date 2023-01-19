@@ -1,5 +1,5 @@
 const Minio = require('minio');
-const { minioConfig } = require('../../configs/global_config');
+const { minioConfig, minioPublicEndpoint } = require('../../configs/global_config');
 const { InternalServerError } = require('../errors');
 const logger = require('../utils/logger');
 let minioClient;
@@ -19,7 +19,7 @@ const isBucketExists = async (bucketName) => {
     return minioClient.bucketExists(bucketName);
   } catch (err) {
     logger.error(err, ctx, 'isBucketExists');
-    throw new InternalServerError();
+    throw new InternalServerError(err.message, { bucketName });
   }
 };
 
@@ -54,7 +54,7 @@ const bucketCreate = async (bucketName, isPublic = false, region = 'us-east-1') 
     return true;
   } catch (err) {
     logger.error(err, ctx, 'bucketCreate');
-    throw new InternalServerError(err);
+    throw new InternalServerError(err.message, { bucketName });
   }
 };
 
@@ -64,7 +64,7 @@ const bucketRemove = async (bucketName = minioConfig.bucketName, region = 'us-ea
     return true;
   } catch (err) {
     logger.error(err, ctx, 'bucketRemove');
-    throw new InternalServerError(err);
+    throw new InternalServerError(err.message, { bucketName });
   }
 };
 
@@ -73,7 +73,7 @@ const objectUpload = async ({ bucketName = minioConfig.bucketName, objectName, f
     return minioClient.fPutObject(bucketName, objectName, filePath, meta);
   } catch (err) {
     logger.error(err, ctx, 'objectUpload');
-    throw new InternalServerError({ msg: 'Failed to upload object', data: { bucketName, objectName } });
+    throw new InternalServerError(err.message, { bucketName, objectName });
   }
 };
 
@@ -83,7 +83,7 @@ const bufferObjectUpload = async ({ bucketName = minioConfig.bucketName, objectN
     return objectName;
   } catch (err) {
     logger.error(err, ctx, 'bufferObjectUpload');
-    throw new InternalServerError('Failed to upload object', { bucketName, objectName });
+    throw new InternalServerError(err.message, { bucketName, objectName });
   }
 };
 
@@ -92,7 +92,7 @@ const objectDownload = async ({ bucketName = minioConfig.bucketName, objectName,
     return minioClient.fGetObject(bucketName, objectName, filePath);
   } catch (err) {
     logger.error(err, ctx, 'objectDownload');
-    throw new InternalServerError(err);
+    throw new InternalServerError(err.message, { bucketName, objectName });
   }
 };
 
@@ -102,7 +102,7 @@ const objectRemove = async ({ bucketName = minioConfig.bucketName, objectName })
     return true;
   } catch (err) {
     logger.error(err, ctx, 'objectRemove');
-    throw new InternalServerError(err);
+    throw new InternalServerError(err.message, { bucketName, objectName });
   }
 };
 
@@ -111,8 +111,12 @@ const objectGetUrl = async ({ bucketName = minioConfig.bucketName, objectName, e
     return minioClient.presignedGetObject(bucketName, objectName, expiry);
   } catch (err) {
     logger.error(err, ctx, 'objectGetUrl');
-    throw new InternalServerError(err);
+    throw new InternalServerError(err.message, { bucketName, objectName });
   }
+};
+
+const getObjectPublicUrl = async (objectName) => {
+  return minioPublicEndpoint + objectName;
 };
 
 module.exports = {
@@ -124,5 +128,6 @@ module.exports = {
   objectDownload,
   objectRemove,
   objectGetUrl,
-  bufferObjectUpload
+  bufferObjectUpload,
+  getObjectPublicUrl
 };

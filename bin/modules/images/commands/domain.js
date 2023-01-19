@@ -27,7 +27,7 @@ const insertManyImages = async (payload) => {
   const unUploaded = uploadMany.filter(upload => upload.status !== 'fulfilled').map(upload => (upload.reason));
 
   if (unUploaded.length === images.length) {
-    throw new InternalServerError({ msg: 'Failed to upload images', data: { uploaded, unUploaded } });
+    throw new InternalServerError('Failed to upload images', { uploaded, unUploaded });
   }
 
   await command.insertManyImages(uploaded);
@@ -44,29 +44,29 @@ const deleteManyImages = async (payload) => {
   const { imgIds } = payload;
 
   const resultData = {
-    data: [],
+    imagesData: [],
     failed: 0,
     success: 0
   };
-  const images = await query.findManyImages({ $in: imgIds });
+  const images = await query.findManyImages({ imgId: { $in: imgIds } });
   const dataImgId = images.map(image => (image.imgId));
   const diff = difference(imgIds, dataImgId);
   if (!isEmpty(diff)) {
-    resultData.data.push(diff);
+    resultData.imagesData = [...diff.map(imgId => ({ imgId, msg: 'imgId not found' }))];
     resultData.failed += diff.length;
   }
 
   // delete docs in database
-  const deleteImages = await command.deleteManyImages({ $in: dataImgId });
+  const deleteImages = await command.deleteManyImages({ imgId: { $in: dataImgId } });
   if (deleteImages instanceof Error) {
-    resultData.data.push(dataImgId);
+    resultData.imagesData = [...resultData.imagesData, ...dataImgId.map(imgId => ({ imgId, msg: 'Failed to delete image' }))];
     resultData.failed += dataImgId.length;
   } else {
     resultData.success += dataImgId.length;
   }
 
   if (resultData.failed === imgIds.length) {
-    throw new UnprocessableEntityError({ msg: 'Unable to delete images', data: resultData });
+    throw new UnprocessableEntityError('Unable to delete images', resultData);
   }
 
   // delete file in S3
